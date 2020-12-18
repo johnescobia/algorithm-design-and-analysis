@@ -1,17 +1,17 @@
 #include <iostream>
 #include <fstream>
-#include <chrono>
-#include "HashTable.cpp"
+#include <chrono> 
+#include "HashMap.cpp"
 #include "SearchData.cpp"
 
-// A function that inserts data to the hash table using chaining
-void insert_to_ht(std::string fileName, HashTable<std::string> &ht)
+// A function that inserts data to the hash table using linear probing
+void insert(std::string fileName, HashMap<std::string> &h)
 {
 	std::fstream myFile;
 	myFile.open(fileName, std::ios::in);
 	std::chrono::duration<double> duration;
 	double totalDuration = 0;
-	std::string line = "";		
+	std::string line = "";	
 
 	while(1)
 	{			
@@ -19,9 +19,9 @@ void insert_to_ht(std::string fileName, HashTable<std::string> &ht)
 		
 		if(myFile.eof())
 			break;
-			
+		
 		auto start = std::chrono::system_clock::now();
-		ht.insert(line);
+		h.insertNode(line, fileName); 
 		auto end = std::chrono::system_clock::now();
 		duration = end - start;
 		totalDuration += duration.count();
@@ -29,14 +29,12 @@ void insert_to_ht(std::string fileName, HashTable<std::string> &ht)
 		
 	myFile.close();
 	
-	// Display
-	//~ std::cout << ht << '\n';
+	//~ h.display();
 	std::cout << "Insertion time: " << totalDuration << "s\n";
 }
 
-// A function that searches data in the hash table
-void search_in_ht(HashTable<std::string> &ht, std::string fileName)
-{
+void search(std::string fileName, HashMap<std::string> h)
+{		
 	std::chrono::duration<double> searchableDuration, unsearchableDuration;
 	double totalSeachableTime, totalUnsearchableTime;
 	std::string target = "";
@@ -52,7 +50,7 @@ void search_in_ht(HashTable<std::string> &ht, std::string fileName)
 			target = searchable_set_c[i];
 		
 		auto start = std::chrono::system_clock::now();
-		ht.retrieve(target);
+		h.find(target, fileName);
 		auto end = std::chrono::system_clock::now();
 		searchableDuration = end - start;
 		totalSeachableTime += searchableDuration.count();
@@ -69,7 +67,7 @@ void search_in_ht(HashTable<std::string> &ht, std::string fileName)
 			target = unsearchable_set_c[i];
 		
 		auto start = std::chrono::system_clock::now();	
-		ht.retrieve(target);
+		h.find(target, fileName);
 		auto end = std::chrono::system_clock::now();
 		unsearchableDuration = end - start;
 		totalUnsearchableTime += unsearchableDuration.count();
@@ -80,9 +78,10 @@ void search_in_ht(HashTable<std::string> &ht, std::string fileName)
 	std::cout << "Average search time for unsearchable data: " << totalUnsearchableTime/10 << "s\n";
 }
 
-int main()
-{
-	int option = 0, n = 0;
+//Driver method to test map class 
+int main() 
+{ 
+	int option = 0, n = 0, emails = 0;
 	std::string fileName = "";
 	
 	std::cout << "SELECT DATASET\n"
@@ -96,34 +95,37 @@ int main()
 	
 	if(option == 1)
 	{
-		n = 100;
+		n = 151;
+		emails = 150;
 		fileName = "SET_A.txt";
 	}
 	else if(option == 2)
 	{
-		n = 100000;
+		n = 150001;
+		emails = 150000;
 		fileName = "SET_B.txt";
 	}
 	else if(option == 3)
 	{
-		n = 500000;
+		n = 758099;
+		emails = 500000;
 		fileName = "SET_C.txt";
 	}
 	else
 		return 0;
-		
-	HashTable<std::string> ht(n*0.9);
-	
-	std::cout << "\nSUMMARY\n"
+    
+    HashMap<std::string> h(n);
+    
+    std::cout << "\nSUMMARY\n"
 			  << "Dataset: " << fileName << '\n'
-			  << "Total data: " << n << " emails\n"
-			  << "Array size: " << n*0.9 << '\n';
+			  << "Total data: " << emails << " emails\n"
+			  << "Array size: " << n << '\n';
+    
+    // Insert data to the hash table using linear probing
+    insert(fileName, h);
+    
+    // Search data in the hash table
+    search(fileName, h);
 	
-	// Insert data to the hash table using chaining
-	insert_to_ht(fileName, ht);
-	
-	// Search data in the hash table
-	search_in_ht(ht, fileName);
-	
-	return 0;
-}
+    return 0; 
+} 

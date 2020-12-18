@@ -6,7 +6,7 @@ class HashTable
 {
 	std::vector< LinkedList<T> > table;
 	
-	int hashfunction (std::string hashitem)
+	int hashFunction (std::string hashitem)
 	{
 		int num = 0;
 		
@@ -35,13 +35,13 @@ class HashTable
 	  
 		void insert (T newItem)
 		{
-			int location = hashfunction(newItem); // calculate where to store the number
+			int location = hashFunction(newItem); // calculate where to store the number
 			table[location].insertFront(newItem);
 		}
 	  
 		bool retrieve (T & target)
 		{
-			int location = hashfunction(target);
+			int location = hashFunction(target);
 			if(!table[location].find(target))     // if target is not found
 				return false;
 			
