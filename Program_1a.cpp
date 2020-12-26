@@ -1,23 +1,16 @@
-#include <iostream>
-#include <fstream>
-#include <chrono>
-#include "HashTable.cpp"
-#include "SearchData.cpp"
+#include "Variables.cpp"
+#include "HashTable_1a.cpp"
 
 // A function that inserts data to the hash table using chaining
-void insert_to_ht(std::string fileName, HashTable<std::string> &ht)
+void insert(std::string fileName, HashTable<std::string> &ht)
 {
-	std::fstream myFile;
-	myFile.open(fileName, std::ios::in);
-	std::chrono::duration<double> duration;
-	double totalDuration = 0;
-	std::string line = "";		
-
-	while(1)
+	readFile.open(fileName, std::ios::in);
+	
+	while(true)
 	{			
-		getline(myFile, line);
+		getline(readFile, line);
 		
-		if(myFile.eof())
+		if(readFile.eof())
 			break;
 			
 		auto start = std::chrono::system_clock::now();
@@ -27,20 +20,12 @@ void insert_to_ht(std::string fileName, HashTable<std::string> &ht)
 		totalDuration += duration.count();
 	}
 		
-	myFile.close();
-	
-	// Display
-	//~ std::cout << ht << '\n';
-	std::cout << "Insertion time: " << totalDuration << "s\n";
+	readFile.close();
 }
 
 // A function that searches data in the hash table
-void search_in_ht(HashTable<std::string> &ht, std::string fileName)
-{
-	std::chrono::duration<double> searchableDuration, unsearchableDuration;
-	double totalSeachableTime, totalUnsearchableTime;
-	std::string target = "";
-	
+void search(HashTable<std::string> &ht, std::string fileName)
+{	
 	// Record duration for searching searchable data
 	for(int i = 0; i < 10; i++)
 	{
@@ -74,56 +59,37 @@ void search_in_ht(HashTable<std::string> &ht, std::string fileName)
 		unsearchableDuration = end - start;
 		totalUnsearchableTime += unsearchableDuration.count();
 	}
-	
-	// Display
-	std::cout << "Average search time for searchable data: " << totalSeachableTime/10 << "s\n";
-	std::cout << "Average search time for unsearchable data: " << totalUnsearchableTime/10 << "s\n";
 }
 
 int main()
-{
-	int option = 0, n = 0;
-	std::string fileName = "";
-	
-	std::cout << "SELECT DATASET\n"
-			  << "[1] SET A\n"
-			  << "[2] SET B\n"
-			  << "[3] SET C\n\n"
-			  << "Enter 1, 2 or 3 to proceed. Other keys will exit the program.\n"
-			  << ">> ";
-	
-	std::cin >> option;
-	
-	if(option == 1)
-	{
-		n = 100;
-		fileName = "SET_A.txt";
-	}
-	else if(option == 2)
-	{
-		n = 100000;
-		fileName = "SET_B.txt";
-	}
-	else if(option == 3)
-	{
-		n = 500000;
-		fileName = "SET_C.txt";
-	}
-	else
+{	
+	// Get number of emails to generate
+	menu(n, fileName, "1a", option);
+
+	if(n == 0)
 		return 0;
 		
 	HashTable<std::string> ht(n*0.9);
 	
-	std::cout << "\nSUMMARY\n"
-			  << "Dataset: " << fileName << '\n'
-			  << "Total data: " << n << " emails\n"
-			  << "Array size: " << n*0.9 << '\n';
-	
 	// Insert data to the hash table using chaining
-	insert_to_ht(fileName, ht);
+	insert(fileName, ht);
 	
 	// Search data in the hash table
-	search_in_ht(ht, fileName);
+	search(ht, fileName);
+	
+	// Exit message
+	std::cout << "\nCHAINING METHOD SUMMARY\n"
+			  << "Dataset: " << fileName << '\n'
+			  << "Total data: " << n << " emails\n"
+			  << "Array size: " << n*0.9 << '\n'
+			  << "Insertion time: " << totalDuration << "s\n"
+			  << "Average search time for searchable data: "
+			  << totalSeachableTime/10 << "s\n"
+			  << "Average search time for unsearchable data: "
+			  << totalUnsearchableTime/10 << "s\n";
+	
+	// Uncomment the code below to display the hashtable
+	// std::cout << ht << '\n';
 	
 	return 0;
 }

@@ -1,6 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include "Menu.cpp"
+#include "Variables.cpp"
 
 // A function that returns a random character from the passed string
 char generate_random_char(std::string s, int x)
@@ -19,11 +17,11 @@ int main()
 	// String array of dot domain names	
 	std::string domain[] = {"com","net","org"};
 	
-	int n = 0;
-	std::string fileName = "";
-	
 	// Get number of emails to generate
-	menu(n, fileName);
+	menu(n, fileName, "gd", option);
+	
+	if(n == 0)
+		return 0;
 	
 	std::string email = "";
 	int counter = n;
@@ -56,12 +54,10 @@ int main()
 		email += '\n';
 	}
 	
-	// Create a text file "fileName". And then insert variable email
-	// into text file fileName.
-	std::ofstream myFile;
-	myFile.open (fileName);
-	myFile << email;
-	myFile.close();
+	// Create a text file fileName.txt and insert variable email into it
+	writeFile.open(fileName);
+	writeFile << email;
+	writeFile.close();
 	
 	// Exit message
 	std::cout << "\n" << n << " emails have been generated and inserted to "

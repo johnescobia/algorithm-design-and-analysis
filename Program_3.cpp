@@ -1,22 +1,16 @@
-#include <iostream>
-#include <fstream>
-#include <chrono>
+#include "Variables.cpp"
 #include "PriorityQueue.cpp"
 
 // A function that inserts data to the hash table using chaining
 void enqueue(std::string fileName, PriorityQueue<std::string> &pq)
 {
-	std::fstream myFile;
-	myFile.open(fileName, std::ios::in);
-	std::chrono::duration<double> duration;
-	double totalDuration = 0;
-	std::string line = "";		
+	readFile.open(fileName, std::ios::in);	
 
-	while(1)
+	while(true)
 	{			
-		getline(myFile, line);
+		getline(readFile, line);
 		
-		if(myFile.eof())
+		if(readFile.eof())
 			break;
 			
 		auto start = std::chrono::system_clock::now();
@@ -26,18 +20,14 @@ void enqueue(std::string fileName, PriorityQueue<std::string> &pq)
 		totalDuration += duration.count();
 	}
 		
-	myFile.close();
+	readFile.close();
 	
 	// Display
 	//~ std::cout << ht << '\n';
-	std::cout << "Enqueue time: " << totalDuration << "s\n";
 }
 
 void dequeue(int n, PriorityQueue<std::string> &pq)
 {
-	std::chrono::duration<double> duration;
-	double totalDuration = 0;
-	
 	for (int i = 0; i < n*0.9; i++)
 	{    
 		auto start = std::chrono::system_clock::now();
@@ -46,50 +36,31 @@ void dequeue(int n, PriorityQueue<std::string> &pq)
 		duration = end - start;
 		totalDuration += duration.count();
 	}
-	
-	std::cout << "Dequeue time: " << totalDuration << "s\n";
 }
 
 int main ()
-{	
-	int option = 0, n = 0;
-	std::string fileName = "";
-	PriorityQueue<std::string> pq;
-	
-	std::cout << "SELECT DATASET\n"
-			  << "[1] SET A\n"
-			  << "[2] SET B\n"
-			  << "[3] SET C\n\n"
-			  << "Enter 1, 2 or 3 to proceed. Other keys will exit the program.\n"
-			  << ">> ";
-	
-	std::cin >> option;
-	
-	if(option == 1)
-	{
-		n = 100;
-		fileName = "SET_A.txt";
-	}
-	else if(option == 2)
-	{
-		n = 100000;
-		fileName = "SET_B.txt";
-	}
-	else if(option == 3)
-	{
-		n = 500000;
-		fileName = "SET_C.txt";
-	}
-	else
+{		
+	// Get number of emails to generate
+	menu(n, fileName, "3", option);
+
+	if(n == 0)
 		return 0;
-		
-	std::cout << "\nPRIORITY QUEUE SUMMARY\n\n"
-			  << "Dataset     : " << fileName
-			  << "\nTotal data  : " << n << " emails\n";
 	
+	PriorityQueue< std::string > pq;
+	
+	// Enqueue data to priority queue
 	enqueue(fileName, pq);
+	
+	// Dequeue data from priority queue
 	dequeue(n, pq);
 	
+	// Exit message
+	std::cout << "\nPRIORITY QUEUE SUMMARY\n"
+			  << "Dataset     : " << fileName << '\n'
+			  << "Total data  : " << n << " emails\n"
+			  << "Enqueue time: " << totalDuration << "s\n"
+			  << "Dequeue time: " << totalDuration << "s\n";
+
 	return 0;
 }
 

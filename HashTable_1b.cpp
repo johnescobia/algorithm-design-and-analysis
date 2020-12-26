@@ -1,35 +1,33 @@
 //template for generic type 
 template<typename K> 
   
-//Hashnode class 
+// Hashnode class 
 class HashNode 
 { 
-    public: 
-    K key;
+	public: 
+		K key;
       
-    //Constructor of hashnode  
-    HashNode(K key) 
-    { 
-        this->key = key; 
-    } 
+		//Constructor of hashnode  
+		HashNode(K key) 
+		{ 
+			this->key = key; 
+		} 
 }; 
   
 // Template for generic type 
 template<typename K> 
 
 // Hashmap class 
-class HashMap 
+class HashTable
 { 
     // Hash element array 
     HashNode<K> **arr; 
 
     //current size 
     int size; 
-    //dummy node 
-    //~ HashNode<K> *dummy; 
   
     public: 
-		HashMap(int n) 
+		HashTable(int n) 
 		{ 
 			//Initial capacity of hash array 
 			size = n; 
@@ -39,8 +37,6 @@ class HashMap
 			for(int i=0 ; i < size ; i++) 
 				arr[i] = NULL; 
 			  
-			//~ // Dummy node with value and key -1 and ""
-			//~ dummy = new HashNode<K>(-1, ""); 
 		} 
 		
 		// Hash function to find index
@@ -51,6 +47,7 @@ class HashMap
 			if(fileName == "SET_B.txt" || fileName == "SET_C.txt")
 				n = 987654;
 			
+			// Hash code
 			for(char x: key)
 					num += abs(int(x))*n;
 					
@@ -97,54 +94,27 @@ class HashMap
 			return false;
 		}
 		  
-		//Function to search the value for a given key 
-		//~ V get(int key) 
-		//~ { 
-			//~ // Apply hash function to find index for given key 
-			//~ int hashIndex = hashCode(key); 
-			//~ int counter=0; 
-			//~ //finding the node with given key    
-			//~ while(arr[hashIndex] != NULL) 
-			//~ {
-				//~ counter = 0; 
-				
-				//~ if(counter++>capacity)  //to avoid infinite loop 
-					//~ return 0;         
-				
-				//~ //if node found return its value 
-				//~ if(arr[hashIndex]->key == key) 
-					//~ return arr[hashIndex]->value; 
-				//~ hashIndex++; 
-				//~ hashIndex %= capacity; 
-			//~ } 
-			  
-			//~ //If not found return null 
-			//~ return 0; 
-		//~ }
-		  
-		//Return current size  
+		// Return current size  
 		int sizeofMap() 
 		{ 
 			return size; 
 		} 
 		  
-		//Return true if size is 0 
+		// Return true if size is 0 
 		bool isEmpty() 
 		{ 
 			return size == 0; 
 		} 
 		  
-		//Function to display the stored key value pairs 
+		// Function to display the stored keys 
 		void display() 
 		{ 
-			int cc = 0;
 			for(int i=0 ; i<size ; i++) 
 			{ 
 				if(arr[i] != NULL && arr[i]->key != "")
 				{
-					std::cout << "Item: " << ++cc << " "
-						 << "Index: " << i << " ";
-					std::cout << "key = " << arr[i]->key << std::endl;
+					std::cout << "Index: " << i << " "
+							  << "key = " << arr[i]->key << std::endl;
 				}
 			} 
 		} 

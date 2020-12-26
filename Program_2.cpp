@@ -1,74 +1,38 @@
-#include <iostream>
 #include <vector>
-#include <chrono>
-#include <fstream>
 #include <algorithm>
-#include "SearchData.cpp"
+#include "Variables.cpp"
+#include "BinarySearchTree.cpp"
 
-/* A Binary Tree node */
-class TNode  
-{  
-    public: 
-    std::string data;  
-    TNode* left;  
-    TNode* right;  
-};  
-  
-TNode* newNode(std::string data);  
-  
-/* A function that constructs Balanced Binary Search Tree from a sorted vector of strings */
-TNode* sortedArrayToBST(std::vector<std::string> &arr, int start, int end)  
-{  
-    /* Base Case */
-    if (start > end)  
-		return NULL;  
-  
-    /* Get the middle element and make it root */
-    int mid = (start + end)/2;  
-    TNode *root = newNode(arr[mid]);  
-  
-    /* Recursively construct the left subtree and make it left child of root */
-    root->left = sortedArrayToBST(arr, start, mid - 1);  
-  
-    /* Recursively construct the right subtree and make it right child of root */
-    root->right = sortedArrayToBST(arr, mid + 1, end);  
-  
-    return root;  
-}  
-  
-/* Helper function that allocates a new node with the given data and NULL left and right pointers. */
-TNode* newNode(std::string data)  
-{  
-    TNode* node = new TNode(); 
-    node->data = data;  
-    node->left = NULL;  
-    node->right = NULL;  
-  
-    return node;  
-}  
-
-bool search(TNode* node, std::string key) 
+TNode* insert(std::string fileName, std::vector< std::string > &emails)
 {
-	if(node == NULL)
-		return false;
+	readFile.open(fileName, std::ios::in);
 		
-    if(node->data == key)       // Key is present at root
-		return true;
+	while(true)
+	{			
+		getline(readFile, line);
+		
+		if(readFile.eof())
+			break;
+		
+		emails.push_back(line);
+	}
 	
-    if(node->data < key)   // Key is greater than root's key 
-		search(node->right, key); 
-    else
-		search(node->left, key); // Key is smaller than root's key 
+	readFile.close();
+	
+	auto start = std::chrono::system_clock::now();
+	// Sort emails in ascending order
+	sort(emails.begin(), emails.end());
+
+    // Convert vector to BST
+    TNode *root = sortedArrayToBST(emails, 0, emails.size()-1);   
+    auto end = std::chrono::system_clock::now();
+    duration = end - start;
     
-    return false;
+    return root;
 }
 
-void recordSearch(std::string fileName, TNode *root)
-{
-	std::chrono::duration<double> searchableDuration, unsearchableDuration;
-	double totalSeachableTime, totalUnsearchableTime;
-	std::string target = "";
-	
+void search(std::string fileName, TNode *root)
+{	
 	// Record duration for searching searchable data
 	for(int i = 0; i < 10; i++)
 	{
@@ -102,67 +66,35 @@ void recordSearch(std::string fileName, TNode *root)
 		unsearchableDuration = end - start;
 		totalUnsearchableTime += unsearchableDuration.count();
 	}
-	
-	// Display
-	std::cout << "Average search time for searchable data: " << totalSeachableTime/10 << "s\n";
-	std::cout << "Average search time for unsearchable data: " << totalUnsearchableTime/10 << "s\n";
 }
 
 int main()
-{
-	int option = 0;
-	std::string fileName = "";
-	
-	std::cout << "SELECT DATASET\n"
-			  << "[1] SET A\n"
-			  << "[2] SET B\n"
-			  << "[3] SET C\n\n"
-			  << "Enter 1, 2 or 3 to proceed. Other keys will exit the program.\n"
-			  << ">> ";
-	
-	std::cin >> option;
-	
-	if(option == 1)
-		fileName = "SET_A.txt";
-	else if(option == 2)
-		fileName = "SET_B.txt";
-	else if(option == 3)
-		fileName = "SET_C.txt";
-	else
+{	
+	// Get number of emails to generate
+	menu(n, fileName, "2", option);
+
+	if(n == 0)
 		return 0;
-	
-	std::cout << "\nSUMMARY\n"
-			  << "Dataset: " << fileName << '\n';
 		
 	std::vector< std::string > emails;
 	
-	std::fstream myFile;
-	myFile.open(fileName, std::ios::in);
-	std::string line = "";	
+	// Insert data to AVL tree
+	TNode *root = insert(fileName, emails);
 	
-	std::chrono::duration<double> duration;
-	auto start = std::chrono::system_clock::now();	
-	while(1)
-	{			
-		getline(myFile, line);
-		
-		if(myFile.eof())
-			break;
-		
-		emails.push_back(line);
-	}
+	// Search data in AVL tree
+    search(fileName, root);
 	
-	myFile.close();
-	
-	sort(emails.begin(), emails.end());
-    /* Convert vector to BST */
-    TNode *root = sortedArrayToBST(emails, 0, emails.size()-1);   
-    auto end = std::chrono::system_clock::now();
-    duration = end - start;
-    
-    std::cout << "Insertion time: " << duration.count() << "s\n";
-    
-    recordSearch(fileName, root);
+	// Exit message
+	std::cout << "\nAVL TREE SUMMARY\n"
+			  << "Dataset: " << fileName << '\n'
+			  << "Total data: " << n << " emails\n"
+			  << "Insertion time: " << duration.count() << "s\n"
+			  << "Average search time for searchable data: "
+			  << totalSeachableTime/10 << "s\n"
+			  << "Average search time for unsearchable data: "
+			  << totalUnsearchableTime/10 << "s\n";
+
+    delete root;
 
 	return 0;
 }

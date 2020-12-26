@@ -1,23 +1,16 @@
-#include <iostream>
-#include <fstream>
-#include <chrono> 
-#include "HashMap.cpp"
-#include "SearchData.cpp"
+#include "Variables.cpp" 
+#include "HashTable_1b.cpp"
 
 // A function that inserts data to the hash table using linear probing
-void insert(std::string fileName, HashMap<std::string> &h)
+void insert(std::string fileName, HashTable<std::string> &h)
 {
-	std::fstream myFile;
-	myFile.open(fileName, std::ios::in);
-	std::chrono::duration<double> duration;
-	double totalDuration = 0;
-	std::string line = "";	
+	readFile.open(fileName, std::ios::in);
 
-	while(1)
+	while(true)
 	{			
-		getline(myFile, line);
+		getline(readFile, line);
 		
-		if(myFile.eof())
+		if(readFile.eof())
 			break;
 		
 		auto start = std::chrono::system_clock::now();
@@ -27,18 +20,11 @@ void insert(std::string fileName, HashMap<std::string> &h)
 		totalDuration += duration.count();
 	}
 		
-	myFile.close();
-	
-	//~ h.display();
-	std::cout << "Insertion time: " << totalDuration << "s\n";
+	readFile.close();
 }
 
-void search(std::string fileName, HashMap<std::string> h)
-{		
-	std::chrono::duration<double> searchableDuration, unsearchableDuration;
-	double totalSeachableTime, totalUnsearchableTime;
-	std::string target = "";
-	
+void search(std::string fileName, HashTable<std::string> h)
+{	
 	// Record duration for searching searchable data
 	for(int i = 0; i < 10; i++)
 	{
@@ -72,60 +58,44 @@ void search(std::string fileName, HashMap<std::string> h)
 		unsearchableDuration = end - start;
 		totalUnsearchableTime += unsearchableDuration.count();
 	}
-	
-	// Display
-	std::cout << "Average search time for searchable data: " << totalSeachableTime/10 << "s\n";
-	std::cout << "Average search time for unsearchable data: " << totalUnsearchableTime/10 << "s\n";
 }
 
-//Driver method to test map class 
 int main() 
 { 
-	int option = 0, n = 0, emails = 0;
-	std::string fileName = "";
+	int emails = 0;
 	
-	std::cout << "SELECT DATASET\n"
-			  << "[1] SET A\n"
-			  << "[2] SET B\n"
-			  << "[3] SET C\n\n"
-			  << "Enter 1, 2 or 3 to proceed. Other keys will exit the program.\n"
-			  << ">> ";
-	
-	std::cin >> option;
+	menu(n, fileName, "1b", option);
 	
 	if(option == 1)
-	{
-		n = 151;
 		emails = 150;
-		fileName = "SET_A.txt";
-	}
 	else if(option == 2)
-	{
-		n = 150001;
 		emails = 150000;
-		fileName = "SET_B.txt";
-	}
 	else if(option == 3)
-	{
-		n = 758099;
 		emails = 500000;
-		fileName = "SET_C.txt";
-	}
 	else
 		return 0;
     
-    HashMap<std::string> h(n);
-    
-    std::cout << "\nSUMMARY\n"
-			  << "Dataset: " << fileName << '\n'
-			  << "Total data: " << emails << " emails\n"
-			  << "Array size: " << n << '\n';
+    HashTable<std::string> h(n);
     
     // Insert data to the hash table using linear probing
     insert(fileName, h);
     
     // Search data in the hash table
     search(fileName, h);
+    
+    // Exit message
+    std::cout << "\nLINEAR PROBING METHOD SUMMARY\n"
+			  << "Dataset: " << fileName << '\n'
+			  << "Total data: " << emails << " emails\n"
+			  << "Array size: " << n << '\n'
+			  << "Insertion time: " << totalDuration << "s\n"
+			  << "Average search time for searchable data: "
+			  << totalSeachableTime/10 << "s\n"
+			  << "Average search time for unsearchable data: "
+			  << totalUnsearchableTime/10 << "s\n";   
+			  
+	// Uncomment the code below to display the hashtable
+	// h.display();
 	
     return 0; 
 } 

@@ -10,6 +10,7 @@ class HashTable
 	{
 		int num = 0;
 		
+		// Hash code
 		for(char x: hashitem)
 			num += int(x);
 		
