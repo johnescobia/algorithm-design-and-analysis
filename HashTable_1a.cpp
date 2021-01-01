@@ -1,16 +1,16 @@
 #include <vector>
 #include "LinkedList.cpp"
 
-template <typename T>
+template < typename T >
 class HashTable
 {
 	std::vector< LinkedList<T> > table;
 	
-	int hashFunction (std::string hashitem)
+	int hashFunction ( std::string hashitem )
 	{
 		int num = 0;
 		
-		// Hash code
+		// Hash code to convert letters to integers with ascii values
 		for(char x: hashitem)
 			num += int(x);
 		
@@ -18,38 +18,47 @@ class HashTable
 	}
  
 	public:
-		HashTable (int size)
+	    // Constructor
+		HashTable ( int size )
 		{
-			table.resize (size); // resize vector to support size elements.
+			// Resize vector to support size elements
+			table.resize(size);
 		}
 		
+		// Deconstructor
 		~HashTable()
 		{
 			for(size_t i = 0; i < table.size(); i++)
 				table[i].makeEmpty();
 		}
 		
+		// A function that returns the size of the hash table
 		int size()
 		{
 			return table.size();
 		}
-	  
-		void insert (T newItem)
+		
+		// Subroutine that calculates where to store the number
+		// and inserts element to hash table
+		void insert ( T newItem )
 		{
-			int location = hashFunction(newItem); // calculate where to store the number
+			int location = hashFunction(newItem);
 			table[location].insertFront(newItem);
 		}
-	  
-		bool retrieve (T & target)
+		
+		// A function that determines if element exists in the hash table 
+		bool retrieve ( T & target )
 		{
 			int location = hashFunction(target);
-			if(!table[location].find(target))     // if target is not found
-				return false;
+			
+			// Return false if target is not found
+			if(!table[location].find(target)) return false;
 			
 			return true;
 		}
-	  
-		friend std::ostream& operator<< (std::ostream& os, HashTable<T>& ht)
+		
+		// Override operator<<
+		friend std::ostream& operator<< ( std::ostream& os, HashTable<T>& ht )
 		{
 			for (int i = 0; i < ht.size(); i++)
 				os << i << " = " << ht.table[i] << '\n';

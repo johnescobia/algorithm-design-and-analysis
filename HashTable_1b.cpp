@@ -27,6 +27,7 @@ class HashTable
     int size; 
   
     public: 
+		// Constructor
 		HashTable(int n) 
 		{ 
 			//Initial capacity of hash array 
@@ -47,14 +48,14 @@ class HashTable
 			if(fileName == "SET_B.txt" || fileName == "SET_C.txt")
 				n = 987654;
 			
-			// Hash code
+			// Hash code to convert letters to integers with ascii values
 			for(char x: key)
 					num += abs(int(x))*n;
 					
 			return num % size; 
 		} 
 		  
-		//Function to add key value pair 
+		//A subcroutine to add key value pair 
 		void insertNode(K key, std::string fileName) 
 		{ 
 			HashNode<K> *temp = new HashNode<K>(key); 
@@ -73,7 +74,8 @@ class HashTable
 			arr[hashIndex] = temp; 
 		}
 		
-		// Return true if found
+		// A function that returns true if element is found
+		// otherwise return false
 		bool find(K key, std::string fileName) 
 		{ 			  
 			// Apply hash function to find index for given key 
@@ -94,27 +96,27 @@ class HashTable
 			return false;
 		}
 		  
-		// Return current size  
+		// A function that returns current size  
 		int sizeofMap() 
 		{ 
 			return size; 
 		} 
 		  
-		// Return true if size is 0 
+		// A function that returns true if size is 0 
 		bool isEmpty() 
 		{ 
 			return size == 0; 
 		} 
 		  
-		// Function to display the stored keys 
+		// A subroutine to display the stored keys 
 		void display() 
 		{ 
 			for(int i=0 ; i<size ; i++) 
 			{ 
 				if(arr[i] != NULL && arr[i]->key != "")
 				{
-					std::cout << "Index: " << i << " "
-							  << "key = " << arr[i]->key << std::endl;
+					std::cout << "Index: " << i
+							  << " key = " << arr[i]->key << std::endl;
 				}
 			} 
 		} 

@@ -1,4 +1,7 @@
-#include "Variables.cpp"
+#include <iostream>
+#include <fstream>
+#include <chrono>
+#include "Menu.cpp"
 
 // A function that returns a random character from the passed string
 char generate_random_char(std::string s, int x)
@@ -6,18 +9,31 @@ char generate_random_char(std::string s, int x)
 	return s[rand() % x];
 }
 
+// Driver function
 int main()
-{
-	// Character array of alphabets	
+{	
+	// Number of emails
+	int n = 0;
+
+	// Option determines combination of n and fileName
+	int option = 0;
+
+	// Text file name
+	std::string fileName = "";
+	
+	// Variable to write file
+	std::ofstream writeFile;
+	
+	// String of alphabets	
 	std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-	// Character array of alphabets and numbers
+	// String of alphabets and numbers
 	std::string alphaNum = alpha + "0123456789";
 
 	// String array of dot domain names	
 	std::string domain[] = {"com","net","org"};
 	
-	// Get number of emails to generate
+	// Show menu and get number of emails to generate
 	menu(n, fileName, "gd", option);
 	
 	if(n == 0)

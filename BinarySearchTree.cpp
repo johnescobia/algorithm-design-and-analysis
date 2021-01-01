@@ -1,20 +1,28 @@
 // Binary tree node
-class TNode  
+struct TNode  
 {  
-    public: 
     std::string data;  
     TNode* left;  
     TNode* right;  
 };  
+
+// A function that allocates and returns a new node with the given data
+TNode* newNode(std::string data)  
+{  
+    TNode* node = new TNode(); 
+    node->data = data;  
+    node->left = NULL;  
+    node->right = NULL;  
   
-TNode* newNode(std::string data);  
-  
-// A function that constructs Balanced Binary Search Tree from a sorted vector of strings
+    return node;  
+}
+
+// A function that constructs an AVL tree from a sorted vector of strings
 TNode* sortedArrayToBST(std::vector<std::string> &arr, int start, int end)  
 {  
     // Base Case
     if (start > end)  
-		return NULL;  
+		return NULL;
   
     // Get the middle element and make it root
     int mid = (start + end)/2;  
@@ -28,30 +36,21 @@ TNode* sortedArrayToBST(std::vector<std::string> &arr, int start, int end)
   
     return root;  
 }  
-  
-// Helper function that allocates a new node with the given data and NULL left and right pointers.
-TNode* newNode(std::string data)  
-{  
-    TNode* node = new TNode(); 
-    node->data = data;  
-    node->left = NULL;  
-    node->right = NULL;  
-  
-    return node;  
-}  
 
-bool search(TNode* node, std::string key) 
+// A function that searches element in the AVL tree
+bool searchBST(TNode* node, std::string key, bool & check) 
 {
-	if(node == NULL)
-		return false;
-		
-    if(node->data == key)         // Key is present at root
-		return true;
+	// Key is not found
+	if(node == NULL) return check = false;
 	
-    if(node->data < key)          // Key is greater than or equal to root's key 
-		search(node->right, key); 
+	// Key is found
+    if(node->data == key) return check = true; 
+	
+    if(node->data < key)             // Key is greater than or equal to root's key
+		searchBST(node->right, key, check);
     else
-		search(node->left, key);  // Key is smaller than root's key 
-    
-    return false;
+		searchBST(node->left, key, check);  // Key is smaller than root's key
+		
+	if(check) return true;
+	else return false;
 }
