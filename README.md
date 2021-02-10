@@ -16,7 +16,7 @@ The tasks performed by these data structures are insert, search, enqueue, and de
 
 Examines the experimental results for the following tasks:
 
-* Sort edges according to distance and value with merge-sort
+* Sort edges according to distance and value with merge sort algorithm
 * Calculate shortest distances with Dijikstra’s algorithm
 * Produce a minimum spanning tree with Kruskal’s algorithm
 * Calculate the maximum benefit with 0/1 Knapsack algorithm
